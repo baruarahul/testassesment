@@ -15,4 +15,16 @@ export class TagService {
     const tags = await this.tagRepository.findAll();
     return { tags: tags.map((tag) => tag.tag) };
   }
+
+  async updateTags(tags: string[]): Promise<void> {
+    for (const tag of tags) {
+      const existingTag = await this.tagRepository.findOne({ tag: tag });
+
+      if (!existingTag) {
+        const newTag = new Tag();
+        newTag.tag = tag;
+        await this.tagRepository.persistAndFlush(newTag);
+      }
+    }
+  }
 }

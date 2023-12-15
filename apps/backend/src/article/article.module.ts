@@ -8,9 +8,15 @@ import { Article } from './article.entity';
 import { ArticleService } from './article.service';
 import { Comment } from './comment.entity';
 
+//new code : $
+import { TagModule } from '../tag/tag.module'; // import tag module
+
 @Module({
   controllers: [ArticleController],
-  imports: [MikroOrmModule.forFeature({ entities: [Article, Comment, User] }), UserModule],
+  imports: [MikroOrmModule.forFeature({ entities: [Article, Comment, User] }),
+    UserModule,
+    TagModule, // add TagModule to imports array
+  ],
   providers: [ArticleService],
 })
 export class ArticleModule implements NestModule {

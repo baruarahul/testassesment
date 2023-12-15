@@ -9,6 +9,9 @@ import { IArticleRO, IArticlesRO, ICommentsRO } from './article.interface';
 import { Comment } from './comment.entity';
 import { CreateArticleDto, CreateCommentDto } from './dto';
 
+import { Tag } from '../tag/tag.entity';
+import { TagService } from '../tag/tag.service';
+
 @Injectable()
 export class ArticleService {
   constructor(
@@ -19,6 +22,7 @@ export class ArticleService {
     private readonly commentRepository: EntityRepository<Comment>,
     @InjectRepository(User)
     private readonly userRepository: EntityRepository<User>,
+    private readonly tagService: TagService, // Inject TagService
   ) {}
 
   async findAll(userId: number, query: Record<string, string>): Promise<IArticlesRO> {
@@ -148,6 +152,21 @@ export class ArticleService {
     return { comments: article!.comments.getItems() };
   }
 
+  // async create(userId: number, dto: CreateArticleDto) {
+  //   const user = await this.userRepository.findOne(
+  //     { id: userId },
+  //     { populate: ['followers', 'favorites', 'articles'] },
+  //   );
+  //   const article = new Article(user!, dto.title, dto.description, dto.body);
+  //   article.tagList.push(...dto.tagList);
+  //   user?.articles.add(article);
+  //   await this.em.flush();
+
+  //   return { article: article.toJSON(user!) };
+  // }
+
+  // modified code :
+
   async create(userId: number, dto: CreateArticleDto) {
     const user = await this.userRepository.findOne(
       { id: userId },
@@ -156,10 +175,14 @@ export class ArticleService {
     const article = new Article(user!, dto.title, dto.description, dto.body);
     article.tagList.push(...dto.tagList);
     user?.articles.add(article);
+
+    // Update tags
+    await this.tagService.updateTags(dto.tagList);
+
     await this.em.flush();
 
     return { article: article.toJSON(user!) };
-  }
+}
 
   async update(userId: number, slug: string, articleData: any): Promise<IArticleRO> {
     const user = await this.userRepository.findOne(
