@@ -1,1 +1,29 @@
-<p>TODO</p>
+<!-- roster.component.html -->
+
+<div class="home-page">
+  <div class="banner">
+    <div class="container">
+      <h1 class="logo-font">Conduit Roster</h1>
+      <p>A place to share your knowledge.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>User Statistics</h2>
+
+    <table class="pretty-table">
+      <tr>
+        <th>Username</th>
+        <th>Total Articles</th>
+        <th>Total Favorites</th>
+        <th>First Article Date</th>
+      </tr>
+      <tr *ngFor="let stat of (roster$ | async)">
+        <td>{{ stat.username }}</td>
+        <td>{{ stat.totalArticles }}</td>
+        <td>{{ stat.totalFavorites }}</td>
+        <td>{{ stat.firstArticleDate | date }}</td>
+      </tr>
+    </table>
+  </div>
+</div>

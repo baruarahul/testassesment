@@ -50,8 +50,8 @@ export const appConfig: ApplicationConfig = {
       },
       {
         path: 'roster',
-        loadChildren: () => import('@realworld/roster/src/lib/roster.routes').then((m) => m.ROSTER_ROUTES),
-      },
+        loadChildren: () => import('@realworld/roster/src/lib/roster.module').then((m) => m.RosterModule),
+      }
     ]),
     provideStore({
       auth: authFeature.reducer,
